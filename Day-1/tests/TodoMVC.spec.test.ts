@@ -63,3 +63,15 @@ test("Complete one task", async ({ page }) => {
     InCompletedTask.getByRole("checkbox", { checked: true }),
   ).toHaveCount(0);
 });
+
+test("Add task using placeholder locator", async ({ page }) => {
+  await page.goto("https://demo.playwright.dev/todomvc/#/");
+  const input = page.getByPlaceholder("What needs to be done?");
+
+  await input.fill("Learning geByPlaceholder");
+  await input.press("Enter");
+
+  await expect(
+    page.getByText("Learning geByPlaceholder", { exact: true }),
+  ).toBeVisible();
+});
