@@ -75,3 +75,27 @@ test("Add task using placeholder locator", async ({ page }) => {
     page.getByText("Learning geByPlaceholder", { exact: true }),
   ).toBeVisible();
 });
+
+test("Removing the Task and viewing completed task and pending Tasks", async ({
+  page,
+}) => {
+  await page.goto("https://demo.playwright.dev/todomvc/#/");
+
+  const input = page.getByPlaceholder("What needs to be done?");
+  await input.fill("Complete this");
+  await input.press("Enter");
+
+  const completedTask = page
+    .getByTestId("todo-item")
+    .filter({ hasText: "Complete this" });
+
+  await completedTask.getByRole("checkbox").check();
+
+  await input.fill("Pending");
+  await input.press("Enter");
+  await page.getByRole("link", { name: "Completed" }).click();
+  await expect(page.getByText("Complete this", { exact: true })).toBeVisible();
+  await page.getByRole("link", { name: "Active" }).click();
+
+  await expect(page.getByText("Pending", { exact: true })).toBeVisible();
+});
