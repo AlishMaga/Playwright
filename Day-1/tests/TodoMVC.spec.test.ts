@@ -99,3 +99,23 @@ test("Removing the Task and viewing completed task and pending Tasks", async ({
 
   await expect(page.getByText("Pending", { exact: true })).toBeVisible();
 });
+
+test("Using nth", async ({ page }) => {
+  await page.goto("https://demo.playwright.dev/todomvc/#/");
+
+  const input = page.getByPlaceholder("What needs to be done?");
+
+  await input.fill("Learn TypeScript");
+  await input.press("Enter");
+
+  await input.fill("Learn Playwright");
+  await input.press("Enter");
+
+  await input.fill("Practice Locators");
+  await input.press("Enter");
+
+  const secondTask = page.getByTestId("todo-item").nth(1);
+  await secondTask.getByRole("checkbox").check();
+
+  await expect(secondTask.getByRole("checkbox")).toBeChecked();
+});
